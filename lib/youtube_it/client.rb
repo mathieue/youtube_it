@@ -190,8 +190,8 @@ class YouTubeIt
       client.update_playlist(playlist_id, options)
     end
 
-    def add_video_to_playlist(playlist_id, video_id)
-      client.add_video_to_playlist(playlist_id, video_id)
+    def add_video_to_playlist(playlist_id, video_id, position = 1)
+      client.add_video_to_playlist(playlist_id, video_id, position)
     end
 
     def delete_video_from_playlist(playlist_id, playlist_entry_id)

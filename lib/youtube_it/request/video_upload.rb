@@ -321,8 +321,8 @@ class YouTubeIt
         return YouTubeIt::Parser::PlaylistFeedParser.new(response).parse
       end
 
-      def add_video_to_playlist(playlist_id, video_id)
-        playlist_body = video_xml_for(:playlist => video_id)
+      def add_video_to_playlist(playlist_id, video_id, position)
+        playlist_body = video_xml_for(:playlist => video_id, :position => position)
         playlist_url  = "/feeds/api/playlists/%s" % playlist_id
         response      = yt_session.post(playlist_url, playlist_body)
 
@@ -554,6 +554,11 @@ class YouTubeIt
         b.entry(:xmlns => "http://www.w3.org/2005/Atom", 'xmlns:yt' => "http://gdata.youtube.com/schemas/2007") do | m |
           m.id(data[:favorite] || data[:playlist] || data[:response]) if data[:favorite] || data[:playlist] || data[:response]
           m.tag!("yt:rating", :value => data[:rating]) if data[:rating]
+          if data[:position]
+            m.tag!("yt:position") do |tag|
+              tag.text!(data[:position].to_s)
+            end
+          end
           if(data[:subscribe])
             m.category(:scheme => "http://gdata.youtube.com/schemas/2007/subscriptiontypes.cat", :term => "channel")
             m.tag!("yt:username", data[:subscribe])
